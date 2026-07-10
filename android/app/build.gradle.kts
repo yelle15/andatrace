@@ -15,13 +15,10 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.yelle.andatrace.andatrace"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
+        applicationId = "com.yelle.andatrace"
+        minSdkVersion = 23  // Change this if it is set to a lower number like 16 or 19
+        targetSdkVersion = 34
+        versionCode = flutter.versionCode 
         versionName = flutter.versionName
     }
 
