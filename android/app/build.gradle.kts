@@ -16,9 +16,11 @@ android {
 
     defaultConfig {
         applicationId = "com.yelle.andatrace"
-        minSdkVersion = 23  // Change this if it is set to a lower number like 16 or 19
-        targetSdkVersion = 34
-        versionCode = flutter.versionCode 
+
+        minSdk = 24
+        targetSdk = flutter.targetSdkVersion
+
+        versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
