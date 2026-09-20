@@ -1,30 +1,48 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:andatrace/main.dart';
+import 'package:andatrace/processing/preprocessing.dart';
+import 'package:andatrace/processing/htr_service.dart';
+import 'package:andatrace/processing/cner_service.dart';
+import 'package:andatrace/database/local_database_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('AndaTrace UI Render Test', (WidgetTester tester) async {
+    // 1. Build application widget
+    await tester.pumpWidget(const AndaTraceApp());
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // 2. Verify UI elements exist
+    expect(find.text('AndaTrace: Digitalization Pipeline'), findsOneWidget);
+    expect(find.text('Scan & Process Sample Nursing Note (MWE)'), findsOneWidget);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  test('AndaTrace Pipeline Unit Tests', () async {
+    // 1. Test Preprocessing
+    final preprocessResult = await PreprocessingModule.preprocessImage('test_image.png');
+    expect(preprocessResult['status'], equals('success'));
+    expect(preprocessResult['isDeskewed'], isTrue);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // 2. Test HTR Service
+    final htrResult = await HtrService.transcribeFdarNote('test_image.png');
+    expect(htrResult['focus'], contains('Pain'));
+    expect(htrResult.containsKey('data'), isTrue);
+
+    // 3. Test CNER Service
+    final entities = await CnerService.extractEntities(htrResult['data']!);
+    expect(entities.isNotEmpty, isTrue);
+
+    // 4. Test Local Storage
+    final initialRecords = await LocalDatabaseService.getRecords();
+    final testRecord = FdarRecord(
+      id: 'TEST-001',
+      timestamp: DateTime.now(),
+      focus: htrResult['focus']!,
+      data: htrResult['data']!,
+      action: htrResult['action']!,
+      response: htrResult['response']!,
+    );
+    await LocalDatabaseService.saveRecord(testRecord);
+    final updatedRecords = await LocalDatabaseService.getRecords();
+    expect(updatedRecords.length, equals(initialRecords.length + 1));
   });
 }
