@@ -120,8 +120,15 @@ class PowerSyncService {
   /// If [enableSync] is true, Supabase must already be initialized. Sync
   /// then starts in the background as soon as the device has a session.
   static Future<void> init({required bool enableSync}) async {
-    final dir = await getApplicationSupportDirectory();
-    final dbPath = p.join(dir.path, 'andatrace_local.db');
+    // On web there is no file system: the database lives in the browser
+    // (IndexedDB / OPFS) and is addressed by name only.
+    final String dbPath;
+    if (kIsWeb) {
+      dbPath = 'andatrace_local.db';
+    } else {
+      final dir = await getApplicationSupportDirectory();
+      dbPath = p.join(dir.path, 'andatrace_local.db');
+    }
 
     db = PowerSyncDatabase(schema: appSchema, path: dbPath);
     await db.initialize();
