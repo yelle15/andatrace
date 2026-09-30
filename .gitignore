@@ -43,3 +43,45 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# ==========================================
+# Offline-First SQLite & Local Storage
+# ==========================================
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Local storage directories & captured test images
+/local_storage/
+/temp_captures/
+/datasets/
+
+# ==========================================
+# Python, Jupyter & ML Artifacts
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Heavy ML Weights & Datasets
+*.pth
+*.pt
+*.onnx
+*.tflite
+*.h5
+*.bin
+*.csv
+
+# ==========================================
+# Backend secrets (see config/app_config.example.json)
+# ==========================================
+/config/app_config.json
+
+# Pre-edit backups made by Claude (safe to delete)
+/_backup_before_claude/

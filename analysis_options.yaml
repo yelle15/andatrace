@@ -26,3 +26,8 @@ linter:
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
+
+analyzer:
+  exclude:
+    # Pre-edit backups made by Claude; not part of the app.
+    - _backup_before_claude/**
