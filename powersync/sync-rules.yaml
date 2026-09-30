@@ -1,0 +1,21 @@
+# PowerSync sync rules for AndaTrace (Section 3.3.7).
+#
+# Paste this into your PowerSync instance (Dashboard -> your instance ->
+# Sync Rules) and deploy. It decides which server rows are streamed DOWN to
+# each device's local SQLite database. Uploads are handled by the app's
+# SupabaseConnector.uploadData() in lib/database/powersync_service.dart.
+#
+# Prototype scope: every signed-in device receives all ward records, so a
+# nurse can open any patient's history offline. Before deployment, narrow this
+# to per-ward buckets (e.g. parameterised by a ward_id claim on the user).
+#
+# Only the four clinical tables sync. sync_queue_log, sync_metrics and
+# consistency_checks are local-only tables and never leave the device.
+
+bucket_definitions:
+  ward_records:
+    data:
+      - SELECT * FROM patients
+      - SELECT * FROM clinical_notes
+      - SELECT * FROM htr_transcriptions
+      - SELECT * FROM cner_entities

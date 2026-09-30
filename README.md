@@ -57,6 +57,25 @@ flutter doctor
    flutter pub get
    ```
 
+3. **(Optional) Connect the sync backend.** Without this step the app runs in
+   **local-only mode**: every note is still captured, processed, and stored
+   in on-device SQLite; it just never leaves the device.
+
+   1. **Supabase:** create a project, then apply the schema in
+      [`supabase/migrations/`](supabase/migrations/) (`supabase db push`, or
+      paste the SQL into the Dashboard SQL editor). Under
+      *Authentication → Sign In / Providers*, enable **Anonymous sign-ins**
+      (prototype device identity).
+   2. **PowerSync:** create an instance connected to the Supabase database,
+      enable Supabase Auth in its client auth settings, and deploy
+      [`powersync/sync-rules.yaml`](powersync/sync-rules.yaml).
+   3. **App config:** copy `config/app_config.example.json` to
+      `config/app_config.json` (git-ignored) and fill in the three values.
+   4. Run with the config:
+      ```bash
+      flutter run --dart-define-from-file=config/app_config.json
+      ```
+
 ---
 
 ## 💻 Minimal Working Example (MWE) & Reproducibility
@@ -91,9 +110,13 @@ andatrace/
 ├── ios/                  # Native iOS configurations
 ├── lib/                  # Flutter application source code
 │   ├── main.dart         # Entry point
+│   ├── config/           # Backend config read from --dart-define
 │   ├── processing/       # OpenCV & LiteRT model integration
 │   ├── database/         # Local SQLite & PowerSync sync logic
 │   └── ui/               # Image Capture & FDAR entry views
+├── config/               # app_config.example.json (copy to app_config.json)
+├── supabase/migrations/  # Central Postgres schema, RLS, immutability triggers
+├── powersync/            # PowerSync sync rules
 ├── test/                 # Unit tests & reproducibility verification scripts
 ├── pubspec.yaml          # Project dependencies
 └── README.md             # Project documentation & instructions

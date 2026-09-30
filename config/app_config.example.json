@@ -1,0 +1,5 @@
+{
+  "SUPABASE_URL": "https://YOUR-PROJECT-REF.supabase.co",
+  "SUPABASE_PUBLISHABLE_KEY": "YOUR-SUPABASE-PUBLISHABLE-OR-ANON-KEY",
+  "POWERSYNC_URL": "https://YOUR-INSTANCE-ID.powersync.journeyapps.com"
+}
