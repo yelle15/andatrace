@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:powersync/powersync.dart';
+import 'package:powersync/powersync.dart' show SyncStatus;
 
 import '../config/app_config.dart';
 import '../database/local_database_service.dart';
@@ -341,8 +341,14 @@ class _SyncIndicator extends StatelessWidget {
         final status = snapshot.data;
         final (IconData icon, String label) = switch (status) {
           null => (Icons.cloud_off, 'Offline: saving locally'),
-          SyncStatus(uploading: true) => (Icons.cloud_upload, 'Uploading changes'),
-          SyncStatus(downloading: true) => (Icons.cloud_download, 'Downloading changes'),
+          SyncStatus(uploading: true) => (
+            Icons.cloud_upload,
+            'Uploading changes',
+          ),
+          SyncStatus(downloading: true) => (
+            Icons.cloud_download,
+            'Downloading changes',
+          ),
           SyncStatus(connected: true) => (Icons.cloud_done, 'Synced'),
           SyncStatus(connecting: true) => (Icons.cloud_queue, 'Connecting'),
           _ => (Icons.cloud_off, 'Offline: saving locally'),

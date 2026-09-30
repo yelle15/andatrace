@@ -21,7 +21,7 @@ class AppConfig {
     'SUPABASE_PUBLISHABLE_KEY',
   );
 
-  /// Your PowerSync instance URL, e.g. https://<id>.powersync.journeyapps.com
+  /// Your PowerSync instance URL, e.g. `https://<id>.powersync.journeyapps.com`
   static const String powersyncUrl = String.fromEnvironment('POWERSYNC_URL');
 
   /// Private Supabase Storage bucket for captured note images
